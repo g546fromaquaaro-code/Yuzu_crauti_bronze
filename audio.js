@@ -15,4 +15,4 @@ function startBgmTrack(trackIdx){if(!store.settings.bgm)return;ensureAudio();sto
 function toggleBgm(){store.settings.bgm=!store.settings.bgm;saveStore();updateToggles();if(store.settings.bgm)startBgmTrack(state.currentTrack||0);else stopBgm();playTap()}
 function toggleSe(){store.settings.se=!store.settings.se;saveStore();updateToggles();if(store.settings.se)playTap()}
 function updateToggles(){const bgm=document.getElementById('bgmToggle'),se=document.getElementById('seToggle');if(bgm)bgm.textContent=store.settings.bgm?'🎵 BGM ON':'🎵 BGM OFF';if(se)se.textContent=store.settings.se?'🔔 SE ON':'🔔 SE OFF'}
-window.addEventListener('pointerdown',()=>{if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume()},{passive:true});
+window.addEventListener('pointerdown',()=>{if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();if(store&&store.settings&&store.settings.bgm&&!bgmTimer)startBgmTrack(state.currentTrack||0)},{passive:true,once:true});
