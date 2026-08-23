@@ -26,17 +26,69 @@ const L=[
 {n:9,t:"Animals 2",i:"🦁",w:[["zebra","シマウマ","🦓"],["elephant","ゾウ","🐘"],["giraffe","キリン","🦒"],["tiger","トラ","🐯"],["lion","ライオン","🦁"],["cow","ウシ","🐄"]],p:["Is this a lion?","Yes, it is.","No, it isn't.","What am I?","I'm black and white.","I eat grass."]},
 {n:10,t:"Animals 3",i:"🐴",w:[["goat","ヤギ","🐐"],["pig","ブタ","🐷"],["horse","ウマ","🐴"],["sheep","ヒツジ","🐑"],["snake","ヘビ","🐍"]],p:["It is a snake.","What am I?","I'm big.","I like grass."]}
 ];
+
 const G={
-1:[["This ___ rice.","is",["is","are","am","be"],"これはごはんです。"],["These ___ noodles.","are",["are","is","am","be"],"これらはめんです。"],["___ this bread?","Is",["Is","Are","Do","Am"],"これはパンですか？"],["Yes, it ___.","is",["is","are","do","does"],"はい、そうです。"],["No, it ___.","isn't",["isn't","aren't","don't","doesn't"],"いいえ、ちがいます。"]],
-2:[["These ___ potato chips.","are",["are","is","am","be"],"これらはポテトチップスです。"],["This ___ a cake.","is",["is","are","am","be"],"これはケーキです。"],["___ you like potato chips?","Do",["Do","Does","Is","Are"],"あなたはポテトチップスが好きですか？"],["Yes, I ___.","do",["do","am","is","does"],"はい、好きです。"],["No, I ___.","don't",["don't","isn't","aren't","doesn't"],"いいえ、好きではありません。"]],
-3:[["What ___ I?","am",["am","is","are","do"],"私は何でしょう？"],["I ___ long.","'m",["'m","is","are","be"],"私は長いです。"],["I ___ green.","'m",["'m","is","are","be"],"私は緑色です。"],["This ___ a cucumber.","is",["is","are","am","be"],"これはキュウリです。"]],
-4:[["I ___ tomato.","like",["like","likes","am","is"],"私はトマトが好きです。"],["What ___ I?","am",["am","is","are","do"],"私は何でしょう？"],["I ___ green.","'m",["'m","is","are","be"],"私は緑色です。"],["I ___ a vegetable.","'m",["'m","is","are","be"],"私は野菜です。"]],
-5:[["___ you want some apples?","Do",["Do","Does","Is","Are"],"りんごはいかがですか？"],["What ___ I?","am",["am","is","are","do"],"私は何でしょう？"],["I ___ red.","'m",["'m","is","are","be"],"私は赤いです。"],["I ___ sour.","'m",["'m","is","are","be"],"私はすっぱいです。"]],
-6:[["___ you like ham?","Do",["Do","Does","Is","Are"],"あなたはハムが好きですか？"],["Yes, I ___.","do",["do","am","is","does"],"はい、好きです。"],["No, I ___.","don't",["don't","isn't","aren't","doesn't"],"いいえ、好きではありません。"],["There ___ many shrimp.","are",["are","is","am","be"],"たくさんのエビがいます。"]],
-7:[["This ___ a goldfish.","is",["is","are","am","be"],"これは金魚です。"],["This is ___ ant.","an",["an","a","the","some"],"これはアリです。"],["I ___ a dog.","have",["have","has","am","is"],"私は犬を飼っています。"],["___ you like hamsters?","Do",["Do","Does","Is","Are"],"あなたはハムスターが好きですか？"]],
-8:[["___ it a bee?","Is",["Is","Are","Do","Does"],"それはハチですか？"],["Yes, it ___.","is",["is","are","do","does"],"はい、そうです。"],["No, it ___.","isn't",["isn't","aren't","don't","doesn't"],"いいえ、ちがいます。"],["I ___ nuts.","like",["like","likes","am","is"],"私は木の実が好きです。"]],
-9:[["___ this a lion?","Is",["Is","Are","Do","Does"],"これはライオンですか？"],["I ___ grass.","eat",["eat","eats","am","is"],"私は草を食べます。"],["I ___ black and white.","'m",["'m","is","are","be"],"私は白黒です。"]],
-10:[["It ___ a snake.","is",["is","are","am","be"],"それはヘビです。"],["What ___ I?","am",["am","is","are","do"],"私は何でしょう？"],["I ___ big.","'m",["'m","is","are","be"],"私は大きいです。"],["I ___ grass.","like",["like","likes","am","is"],"私は草が好きです。"]]
+1:[
+["This ___ rice.","is",["is","are","am","be"],"これはごはんです。"],
+["These ___ noodles.","are",["are","is","am","be"],"これらはめんです。"],
+["___ this bread?","Is",["Is","Are","Do","Am"],"これはパンですか？"],
+["Yes, it ___.","is",["is","are","do","does"],"はい、そうです。"],
+["No, it ___.","isn't",["isn't","aren't","don't","doesn't"],"いいえ、ちがいます。"]
+],
+2:[
+["These ___ potato chips.","are",["are","is","am","be"],"これらはポテトチップスです。"],
+["This ___ a cake.","is",["is","are","am","be"],"これはケーキです。"],
+["___ you like potato chips?","Do",["Do","Does","Is","Are"],"あなたはポテトチップスが好きですか？"],
+["Yes, I ___.","do",["do","am","is","does"],"はい、好きです。"],
+["No, I ___.","don't",["don't","isn't","aren't","doesn't"],"いいえ、好きではありません。"]
+],
+3:[
+["What ___ I?","am",["am","is","are","do"],"私は何でしょう？"],
+["I ___ long.","'m",["'m","is","are","be"],"私は長いです。"],
+["I ___ green.","'m",["'m","is","are","be"],"私は緑色です。"],
+["This ___ a cucumber.","is",["is","are","am","be"],"これはキュウリです。"]
+],
+4:[
+["I ___ tomato.","like",["like","likes","am","is"],"私はトマトが好きです。"],
+["What ___ I?","am",["am","is","are","do"],"私は何でしょう？"],
+["I ___ green.","'m",["'m","is","are","be"],"私は緑色です。"],
+["I ___ a vegetable.","'m",["'m","is","are","be"],"私は野菜です。"]
+],
+5:[
+["___ you want some apples?","Do",["Do","Does","Is","Are"],"りんごはいかがですか？"],
+["What ___ I?","am",["am","is","are","do"],"私は何でしょう？"],
+["I ___ red.","'m",["'m","is","are","be"],"私は赤いです。"],
+["I ___ sour.","'m",["'m","is","are","be"],"私はすっぱいです。"]
+],
+6:[
+["___ you like ham?","Do",["Do","Does","Is","Are"],"あなたはハムが好きですか？"],
+["Yes, I ___.","do",["do","am","is","does"],"はい、好きです。"],
+["No, I ___.","don't",["don't","isn't","aren't","doesn't"],"いいえ、好きではありません。"],
+["There ___ many shrimp.","are",["are","is","am","be"],"たくさんのエビがいます。"]
+],
+7:[
+["This ___ a goldfish.","is",["is","are","am","be"],"これは金魚です。"],
+["This is ___ ant.","an",["an","a","the","some"],"これはアリです。"],
+["I ___ a dog.","have",["have","has","am","is"],"私は犬を飼っています。"],
+["___ you like hamsters?","Do",["Do","Does","Is","Are"],"あなたはハムスターが好きですか？"]
+],
+8:[
+["___ it a bee?","Is",["Is","Are","Do","Does"],"それはハチですか？"],
+["Yes, it ___.","is",["is","are","do","does"],"はい、そうです。"],
+["No, it ___.","isn't",["isn't","aren't","don't","doesn't"],"いいえ、ちがいます。"],
+["I ___ nuts.","like",["like","likes","am","is"],"私は木の実が好きです。"]
+],
+9:[
+["___ this a lion?","Is",["Is","Are","Do","Does"],"これはライオンですか？"],
+["I ___ grass.","eat",["eat","eats","am","is"],"私は草を食べます。"],
+["I ___ black and white.","'m",["'m","is","are","be"],"私は白黒です。"]
+],
+10:[
+["It ___ a snake.","is",["is","are","am","be"],"それはヘビです。"],
+["What ___ I?","am",["am","is","are","do"],"私は何でしょう？"],
+["I ___ big.","'m",["'m","is","are","be"],"私は大きいです。"],
+["I ___ grass.","like",["like","likes","am","is"],"私は草が好きです。"]
+]
 };
 const JP={
 1:["これはごはんです。","これはパンです。","これらはめんです。","これはハンバーガーです。","これらはサンドイッチです。","これはスパゲッティです。","これはパンですか？","はい、そうです。","いいえ、ちがいます。"],
@@ -51,17 +103,95 @@ const JP={
 10:["それはヘビです。","私は何でしょう？","私は大きいです。","私は草が好きです。"]
 };
 let showJapanese=false,grammarQueue=[],currentGrammar=null;
+
+
+const Q={
+1:[
+{q:"🍞  Is this bread?",a:"Yes, it is.",c:["Yes, it is.","No, it isn't.","Yes, I do.","No, I don't."]},
+{q:"🍚  Is this bread?",a:"No, it isn't.",c:["Yes, it is.","No, it isn't.","Yes, I do.","No, I don't."]}
+],
+2:[
+{q:"👍  Do you like potato chips?",a:"Yes, I do.",c:["Yes, I do.","No, I don't.","Yes, it is.","No, it isn't."]},
+{q:"👎  Do you like potato chips?",a:"No, I don't.",c:["Yes, I do.","No, I don't.","Yes, it is.","No, it isn't."]}
+],
+3:[
+{q:"🥒  What am I?",hint:"I'm long. I'm green.",a:"cucumber",c:["cucumber","carrot","potato","pumpkin"]}
+],
+4:[
+{q:"🥦  What am I?",hint:"I'm green. I'm a vegetable.",a:"broccoli",c:["broccoli","tomato","eggplant","lettuce"]}
+],
+5:[
+{q:"👍  Do you want some apples?",a:"Yes, please.",c:["Yes, please.","No, thank you.","Yes, I do.","Yes, it is."]},
+{q:"👎  Do you want some apples?",a:"No, thank you.",c:["Yes, please.","No, thank you.","No, I don't.","No, it isn't."]}
+],
+6:[
+{q:"👍  Do you like ham?",a:"Yes, I do.",c:["Yes, I do.","No, I don't.","Yes, it is.","No, it isn't."]},
+{q:"👎  Do you like ham?",a:"No, I don't.",c:["Yes, I do.","No, I don't.","Yes, it is.","No, it isn't."]}
+],
+7:[
+{q:"👍  Do you like hamsters?",a:"Yes, I do.",c:["Yes, I do.","No, I don't.","Yes, it is.","No, it isn't."]},
+{q:"👎  Do you like hamsters?",a:"No, I don't.",c:["Yes, I do.","No, I don't.","Yes, it is.","No, it isn't."]}
+],
+8:[
+{q:"🐝  Is it a bee?",a:"Yes, it is.",c:["Yes, it is.","No, it isn't.","Yes, I do.","No, I don't."]},
+{q:"🦋  Is it a bee?",a:"No, it isn't.",c:["Yes, it is.","No, it isn't.","Yes, I do.","No, I don't."]}
+],
+9:[
+{q:"🦁  Is this a lion?",a:"Yes, it is.",c:["Yes, it is.","No, it isn't.","Yes, I do.","No, I don't."]},
+{q:"🦓  Is this a lion?",a:"No, it isn't.",c:["Yes, it is.","No, it isn't.","Yes, I do.","No, I don't."]}
+],
+10:[
+{q:"🐴  What am I?",hint:"I'm big. I like grass.",a:"horse",c:["horse","pig","snake","goat"]}
+]
+};
+
 const sh=a=>[...a].sort(()=>Math.random()-.5);
-let lesson=null,stage=1,queue=[],idx=0,mistakes=[],right=0,sentenceQueue=[],picked=[];
+let lesson=null,stage=1,queue=[],idx=0,mistakes=[],right=0,sentenceQueue=[],picked=[],qaQueue=[];
 function renderGrid(){grid.innerHTML=L.map(l=>`<button class="lesson" onclick="start(${l.n})"><b>Lesson ${l.n}</b><div class="ico">${l.i}</div><div>${l.t}</div><small>${l.w.map(x=>x[0]).join(" ・ ")}</small></button>`).join("")}
-function start(n){lesson=L[n-1];stage=1;queue=sh(lesson.w.map((w,i)=>i));idx=0;mistakes=[];right=0;sentenceQueue=sh(lesson.p.map((p,i)=>i));grammarQueue=sh((G[lesson.n]||[]).map((q,i)=>i));home.classList.add("hide");play.classList.remove("hide");lt.textContent=`Lesson ${n} · ${lesson.t}`;render()}
+function start(n){lesson=L[n-1];stage=1;queue=sh(lesson.w.map((w,i)=>i));idx=0;mistakes=[];right=0;sentenceQueue=sh(lesson.p.map((p,i)=>i));grammarQueue=sh((G[lesson.n]||[]).map((q,i)=>i));qaQueue=sh((Q[lesson.n]||[]).map((q,i)=>i));home.classList.add("hide");play.classList.remove("hide");lt.textContent=`Lesson ${n} · ${lesson.t}`;render()}
 function goHome(){play.classList.add("hide");home.classList.remove("hide")}
-function progress(){let total=1;if(stage===1||stage===2)total=Math.max(queue.length,1);else if(stage===3)total=Math.max(grammarQueue.length,1);else total=Math.max(sentenceQueue.length,1);bar.style.width=`${Math.min(100,(idx/total)*100)}%`;score.textContent=`${idx}/${total}`}
-function stepUI(){[s1,s2,s3,s4].forEach((x,i)=>{x.className="step"+(i+1===stage?" on":i+1<stage?" done":"")})}
+function progress(){
+ let total=1;
+ if(stage===1||stage===2) total=Math.max(queue.length,1);
+ else if(stage===25) total=Math.max(qaQueue.length,1);
+ else if(stage===3) total=Math.max(grammarQueue.length,1);
+ else total=Math.max(sentenceQueue.length,1);
+ bar.style.width=`${Math.min(100,(idx/total)*100)}%`;
+ score.textContent=`${idx}/${total}`;
+}
+function stepUI(){[s1,s2,s3,s4].forEach((x,i)=>{const n=i+1;if(stage===25)x.className="step"+(n<=2?" done":"");else x.className="step"+(n===stage?" on":n<stage?" done":"")})}
 function choicesFor(correct){const others=sh(L.flatMap(x=>x.w.map(w=>w[0])).filter(x=>x!==correct));return sh([correct,...others.slice(0,3)])}
-function render(){stepUI();progress();if(stage===1||stage===2)return vocab();if(stage===3)return grammar();return sentence()}
-function vocab(){if(idx>=queue.length){if(stage===1){stage=2;queue=[...new Set(mistakes)];idx=0;if(!queue.length){stage=3;idx=0;}return render()}stage=3;idx=0;return render()}const wi=queue[idx],w=lesson.w[wi],opts=choicesFor(w[0]);panel.innerHTML=`<div class="sub">${stage===1?"単語4択":"間違えた単語だけ復習"} ${idx+1}/${queue.length}</div><div class="emoji">${w[2]}</div><div class="q">この英単語はどれ？</div><div class="choices">${opts.map(x=>`<button class="choice" onclick="answerWord(this,'${x.replaceAll("'","\\'")}',${wi})">${x}</button>`).join("")}</div><div class="fb" id="fb"></div>`}
-function answerWord(btn,ans,wi){const correct=lesson.w[wi][0],ok=ans===correct;document.querySelectorAll(".choice").forEach(b=>b.disabled=true);if(ok){btn.classList.add("ok");fb.textContent="正解！ 🎉";right++}else{btn.classList.add("ng");[...document.querySelectorAll(".choice")].find(b=>b.textContent===correct)?.classList.add("ok");fb.textContent=`正解は ${correct}`;if(stage===1)mistakes.push(wi)}idx++;setTimeout(render,700)}
+function render(){stepUI();progress();if(stage===1||stage===2)return vocab();if(stage===25)return conversation();if(stage===3)return grammar();return sentence()}
+function vocab(){
+ if(idx>=queue.length){
+   if(stage===1){stage=2;queue=[...new Set(mistakes)];idx=0;if(!queue.length){stage=qaQueue.length?25:3;idx=0;}return render()}
+   stage=qaQueue.length?25:3;idx=0;return render()
+ }
+ const wi=queue[idx],w=lesson.w[wi],opts=choicesFor(w[0]);
+ panel.innerHTML=`<div class="sub">${stage===1?"単語4択":"間違えた単語だけ復習"} ${idx+1}/${queue.length}</div><div class="emoji">${w[2]}</div><div class="choices">${opts.map(x=>`<button class="choice" onclick="answerWord(this,'${x.replaceAll("'","\\'")}',${wi})">${x}</button>`).join("")}</div><div class="fb" id="fb"></div>`;
+}
+function answerWord(btn,ans,wi){
+ const correct=lesson.w[wi][0],ok=ans===correct;document.querySelectorAll(".choice").forEach(b=>b.disabled=true);
+ if(ok){btn.classList.add("ok");fb.textContent="正解！ 🎉";right++}
+ else{btn.classList.add("ng");[...document.querySelectorAll(".choice")].find(b=>b.textContent===correct)?.classList.add("ok");fb.textContent=`正解は ${correct}`;if(stage===1)mistakes.push(wi)}
+ idx++;setTimeout(render,700)
+}
+
+
+function conversation(){
+ if(idx>=qaQueue.length){stage=3;idx=0;return render()}
+ const q=Q[lesson.n][qaQueue[idx]],opts=sh([...q.c]);
+ panel.innerHTML=`<div class="sub">質問に答えよう ${idx+1}/${qaQueue.length}</div><div class="q">${q.q}</div>${q.hint?`<div style="background:#fff5ee;padding:11px;border-radius:14px;margin-bottom:14px;font-weight:800">${q.hint}</div>`:""}<div class="choices">${opts.map((x,i)=>`<button class="choice" onclick="answerConversation(this,${i})">${x}</button>`).join("")}</div><div class="fb" id="fb"></div>`;
+ panel.dataset.qa=JSON.stringify({opts,a:q.a});
+}
+function answerConversation(btn,optIndex){
+ const data=JSON.parse(panel.dataset.qa),ans=data.opts[optIndex],correct=data.a;
+ document.querySelectorAll(".choice").forEach(b=>b.disabled=true);
+ if(ans===correct){btn.classList.add("ok");fb.textContent="正解！ 会話OK 💬";right++}
+ else{btn.classList.add("ng");[...document.querySelectorAll(".choice")].find(b=>b.textContent===correct)?.classList.add("ok");fb.textContent=`正解は ${correct}`}
+ idx++;setTimeout(render,750)
+}
+
 function grammar(){
  if(idx>=grammarQueue.length){stage=4;idx=0;return render()}
  const q=G[lesson.n][grammarQueue[idx]],opts=sh([...q[2]]);
@@ -77,17 +207,30 @@ function answerGrammar(btn,optIndex){
  idx++;
  setTimeout(()=>{currentGrammar=null;render()},750)
 }
+
 function sentence(){
  if(idx>=sentenceQueue.length){return finish()}
  const si=sentenceQueue[idx],text=lesson.p[si],jp=(JP[lesson.n]||[])[si]||"",words=text.replace(/[?.]/g,"").split(/\s+/);
  picked=[];const tokens=sh(words.map((w,i)=>({w,i,id:Math.random()})));
- panel.innerHTML=`<div class="sub">文章並び替え ${idx+1}/${sentenceQueue.length}</div><div class="q">正しい順番に並べよう</div><div style="margin:-4px 0 12px"><button class="secondary" onclick="toggleJapanese()">日本語 ${showJapanese?"ON":"OFF"}</button></div><div id="jpHint" style="display:${showJapanese?"block":"none"};background:#fff5ee;padding:10px;border-radius:14px;margin-bottom:12px">${jp}</div><div class="answer" id="ans"></div><div class="tokens" id="tokens">${tokens.map(t=>`<button class="token" data-id="${t.id}" onclick="pick(this,'${t.w.replaceAll("'","\\'")}')">${t.w}</button>`).join("")}</div><div class="row"><button class="secondary" onclick="undo()">1つ戻す</button><button class="main" onclick='checkSentence(${JSON.stringify(text)})'>答える</button></div><div class="fb" id="fb"></div>`
+ panel.innerHTML=`<div class="sub">文章並び替え ${idx+1}/${sentenceQueue.length}</div><div class="q">正しい順番に並べよう</div><div style="margin:-4px 0 12px"><button class="secondary" onclick="toggleJapanese()">日本語 ${showJapanese?"ON":"OFF"}</button></div><div id="jpHint" style="display:${showJapanese?"block":"none"};background:#fff5ee;padding:10px;border-radius:14px;margin-bottom:12px">${jp}</div><div class="answer" id="ans"></div><div class="tokens" id="tokens">${tokens.map(t=>`<button class="token" data-id="${t.id}" onclick="pick(this,'${t.w.replaceAll("'","\\'")}')">${t.w}</button>`).join("")}</div><div class="row"><button class="secondary" onclick="undo()">1つ戻す</button><button class="main" onclick='checkSentence(${JSON.stringify(text)})'>答える</button></div><div class="fb" id="fb"></div>`;
 }
-function toggleJapanese(){showJapanese=!showJapanese;const h=document.getElementById("jpHint");if(h)h.style.display=showJapanese?"block":"none";const b=event.currentTarget;if(b)b.textContent=`日本語 ${showJapanese?"ON":"OFF"}`;}
+
+function toggleJapanese(){
+ showJapanese=!showJapanese;
+ const h=document.getElementById("jpHint");
+ if(h)h.style.display=showJapanese?"block":"none";
+ const b=event.currentTarget;
+ if(b)b.textContent=`日本語 ${showJapanese?"ON":"OFF"}`;
+}
+
 function pick(btn,w){if(btn.classList.contains("used"))return;btn.classList.add("used");picked.push({w,id:btn.dataset.id});drawAnswer()}
 function undo(){const x=picked.pop();if(!x)return;document.querySelector(`[data-id="${x.id}"]`)?.classList.remove("used");drawAnswer()}
 function drawAnswer(){ans.textContent=picked.map(x=>x.w).join(" ")}
-function checkSentence(correct){const base=correct.replace(/[?.]/g,"").trim(),mine=picked.map(x=>x.w).join(" ").trim();if(mine===base){fb.textContent="正解！ ✨";right++;idx++;setTimeout(render,700)}else{fb.textContent=`もう一度！ 正解：${correct}`}}
-function finish(){stepUI();bar.style.width="100%";panel.innerHTML=`<div class="result">🏆</div><div class="q">Lesson ${lesson.n} 完了！</div><p>単語は1回ずつ出題し、間違いだけ復習しました。文法穴埋めと文章並び替えも重複なしです。</p><div class="row"><button class="secondary" onclick="start(${lesson.n})">もう一度</button><button class="main" onclick="goHome()">Lesson一覧へ</button></div>`}
+function checkSentence(correct){
+ const base=correct.replace(/[?.]/g,"").trim(),mine=picked.map(x=>x.w).join(" ").trim();
+ if(mine===base){fb.textContent="正解！ ✨";right++;idx++;setTimeout(render,700)}
+ else{fb.textContent=`もう一度！ 正解：${correct}`}
+}
+function finish(){stepUI();bar.style.width="100%";panel.innerHTML=`<div class="result">🏆</div><div class="q">Lesson ${lesson.n} 完了！</div><p>単語は1回ずつ出題し、間違いだけ復習しました。質問への受け答え、文法穴埋め、文章並び替えも練習しました。</p><div class="row"><button class="secondary" onclick="start(${lesson.n})">もう一度</button><button class="main" onclick="goHome()">Lesson一覧へ</button></div>`}
 renderGrid();
 </script></body></html>
