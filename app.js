@@ -1,5 +1,5 @@
 const byId=id=>document.getElementById(id);
-const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+const shuffle=a=>[...a].sort(()=>Math.random()-0.5);
 const uniq=a=>[...new Set(a)];
 const STEP_COUNT = 6;
 const STORAGE_KEY = 'yuzu_bronze_blue_v1';
@@ -16,7 +16,6 @@ function lessonProgress(n){ const p=store.progress[n]||{bestStage:0,clears:0,cle
 function renderCards(){ const cards = LESSONS.map((l,idx)=>{ const p=lessonProgress(l.n); const percent=Math.round((Math.min(p.bestStage||0,STEP_COUNT)/STEP_COUNT)*100); const colors=[['#8ec5ff','#7de2ff'],['#ffd6f0','#ffc6e5'],['#d8d1ff','#bad8ff'],['#b9f1df','#92d8ff'],['#ffe7b3','#ffd9a6'],['#ffd2cd','#ffc1bd'],['#d8e5ff','#c5d7ff'],['#d4f3ff','#c4eeff'],['#dcd7ff','#cdd3ff'],['#d7f1ff','#c7e7ff']][idx%10]; return `<button class='lessonCard' onclick='startLesson(${l.n})'>
   <div class='top'><div class='roundIcon'>${l.emoji}</div><div style='text-align:right'><div class='count'>${p.cleared?'CLEAR':'STEP'} ${p.bestStage||0}/${STEP_COUNT}</div><div class='smallTag'>Lesson ${l.n}</div></div></div>
   <h3>${l.title}</h3>
-  <p>${l.words.map(w=>w[0]).join(' ・ ')}</p>
   <div class='progress'><i style='width:${percent}%;background:linear-gradient(90deg,${colors[0]},${colors[1]})'></i></div>
   <div class='lessonMeta'><span>${p.clears||0}回クリア</span><span>${percent}%</span></div>
 </button>`; }).join(''); byId('cards').innerHTML = cards; renderBadges(); updateHomeHeader(); }
@@ -46,7 +45,7 @@ function undoToken(){ playTap(); const last=state.picked.pop(); if(last===undefi
 function checkSentence(){ const item = state.lesson.sentences[state.sentenceQueue[state.idx]]; const target=item[0].replace(/[?.]/g,''); const mine=state.picked.map(x=>x.word).join(' '); if(mine===target){ byId('fb').textContent='正解！'; playGood(); state.idx++; setTimeout(render,700); } else { byId('fb').textContent=`もう一度！ 正解：${item[0]}`; playBad(); } }
 function burstConfetti(){ const wrap=byId('confetti'); wrap.innerHTML=''; const colors=['#7dbbff','#8be0ff','#ffd6ef','#b7f2da','#d6d0ff']; for(let i=0;i<36;i++){ const s=document.createElement('span'); s.style.left=(Math.random()*100)+'vw'; s.style.background=colors[Math.floor(Math.random()*colors.length)]; s.style.transform=`translateY(0) rotate(${Math.random()*180}deg)`; s.style.animationDelay=(Math.random()*0.2)+'s'; s.style.opacity='.95'; wrap.appendChild(s); } setTimeout(()=>wrap.innerHTML='',1900); }
 function renderFinish(){ setProgress(6); const p = lessonProgress(state.lesson.n); p.cleared=true; p.clears=(p.clears||0)+1; p.bestStage=6; store.progress[state.lesson.n]=p; saveStore(); updatePlayHeader(); burstConfetti(); playClear(); byId('panelBody').innerHTML = `<div class='finish'><div class='heroBadge'>🏅 ${BADGE_LABELS[state.lesson.n-1]}</div><h3>CLEAR!</h3><p class='note'>${state.lesson.title} をクリアしました。<br>また練習すると、お店もどんどん成長します。</p><div class='center' style='margin:10px auto 16px;max-width:130px'><img src='mascot.svg' alt='mascot'></div><div class='actionRow'><button class='ghost' onclick='startLesson(${state.lesson.n})'>もう一度</button><button class='main' onclick='goHome()'>Lesson一覧へ</button></div></div>`; renderCards(); }
-renderCards(); updateToggles(); state.currentTrack = Object.values(store.lessonTrack)[0] || 0;
+renderCards(); updateToggles(); state.currentTrack = Object.values(store.lessonTrack)[0] || 0; if(store.settings.bgm) startBgmTrack(state.currentTrack);
 
 byId('bgmToggle').onclick = toggleBgm;
 byId('seToggle').onclick = toggleSe;
