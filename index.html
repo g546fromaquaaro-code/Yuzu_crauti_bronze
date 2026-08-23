@@ -1,1 +1,85 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f3f7ff"><title>Bronze English</title><link rel="stylesheet" href="style.css"><style>.audioControls{display:flex;align-items:center;gap:7px}.audioBtn{border:1px solid #dfe7ff;background:#fff;color:#6170a6;border-radius:999px;padding:8px 11px;font-weight:900;font-size:11px;box-shadow:0 6px 16px rgba(88,105,170,.08)}.audioBtn.off{opacity:.48;filter:grayscale(.25)}@media(max-width:620px){.topin{flex-wrap:wrap}.audioControls{order:3;width:100%;justify-content:flex-end}.audioBtn{padding:7px 9px;font-size:10px}}</style></head><body><div class="top"><div class="topin"><div class="brand"><img src="mascot.svg" alt="mascot"><div><span>Bronze English</span><small>クラウティ Bronze 復習</small></div></div><div class="audioControls"><button class="audioBtn" id="bgmBtn" onclick="toggleBGM()">🎵 BGM ON</button><button class="audioBtn" id="seBtn" onclick="toggleSE()">🔔 SE ON</button></div><div class="tag" id="topTag">0/10 CLEAR</div></div></div><div class="app"><main><section id="home"><div class="sparkle sparkle1">✦</div><div class="sparkle sparkle2">♡</div><button class="allLessonsCard" onclick="document.getElementById('lessonGrid').scrollIntoView({behavior:'smooth'})"><div class="allIcon">⚡</div><div class="allCopy"><b>全レッスン</b><span>Lesson 1〜10を順番に練習</span></div><div class="allProgress"><strong id="clearTotal">0 / 10 CLEAR</strong><span>→</span></div></button><div class="miniStats"><div class="miniStat"><div class="miniIcon blue">🏪</div><div><small>お店ランク</small><b id="restaurantLevel">🛒 屋台</b></div></div><div class="miniStat"><div class="miniIcon aqua">🎧</div><div><small>学習フロー</small><b>発音 → 4択 → 文法</b></div></div><div class="miniStat"><div class="miniIcon violet">🏆</div><div><small>ごほうび</small><b>Lessonバッジを集めよう</b></div></div></div><div class="sectionHead"><div><p>BRONZE COURSE</p><h1>Lessonをえらぼう</h1></div><img src="mascot.svg" alt="burger mascot"></div><div class="grid" id="lessonGrid"></div><div class="homeTip"><div class="tipIcon">💡</div><div><b>おすすめの進め方</b><p>まず発音を聞いて単語4択。間違えた単語だけ復習して、文法穴埋めと並び替えまで進もう。</p></div></div></section><section id="play" class="hidden"><div class="playTop"><button class="back" onclick="goHome()">← Lesson一覧へ</button><div class="tag" id="lessonTag">Lesson</div></div><div class="card"><div class="titleRow"><h2 id="lessonTitle"></h2><div class="score" id="scoreText">0/0</div></div><div class="stageRow"><div class="stageChip" id="chip1">① 単語4択</div><div class="stageChip" id="chip2">② 間違い復習</div><div class="stageChip" id="chip3">③ 文法穴埋め</div><div class="stageChip" id="chip4">④ 並び替え</div></div><div class="bar"><i id="barFill"></i></div><div id="panel"></div></div></section></main></div><script src="data.js"></script><script src="app.js"></script><script src="audio.js"></script></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5fbff">
+  <title>Bronze English</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbarIn">
+      <div class="brand">
+        <img src="mascot.svg" alt="mascot">
+        <span>Bronze English</span>
+      </div>
+      <div class="topActions">
+        <button class="toggle" id="bgmToggle">🎵 BGM ON</button>
+        <button class="toggle" id="seToggle">🔔 SE ON</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <section id="home">
+      <div class="hero">
+        <div class="heroGrid">
+          <div>
+            <div class="heroTitle">☁️ 全レッスン <span style="font-size:16px;font-weight:800;opacity:.95">かわいい青色版</span></div>
+            <div class="heroSub">単語4択 → リスニング（日本語4択） → 間違い復習 → 質問に答える → 文法穴埋め → 並び替え。<br>やさしい丸文字と青系デザインで、毎日続けやすい英語アプリです。</div>
+            <div class="heroStats">
+              <div class="stat"><div>クリア</div><b id="clearCount">0</b><div>Lessons</div></div>
+              <div class="stat"><div>バッジ</div><b id="badgeCount">0</b><div>Collected</div></div>
+              <div class="stat"><div>BGM</div><b>10</b><div>Random tracks</div></div>
+            </div>
+          </div>
+          <div class="restaurant">
+            <div class="emoji" id="restEmoji">🛒</div>
+            <div class="name" id="restName">やたいスタンド</div>
+            <div class="sub">Lessonをクリアするとお店が成長します。<br><span id="trackName">BGM: -</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards" id="cards"></div>
+      <div class="badges">
+        <h4>ごほうびバッジ</h4>
+        <div class="badgeList" id="badgeList"></div>
+      </div>
+    </section>
+
+    <section id="play" class="hidden playWrap">
+      <div class="navRow">
+        <button class="back" onclick="goHome()">← Lesson一覧</button>
+        <div class="navTitle" id="playNav">Lesson</div>
+      </div>
+
+      <div class="panel">
+        <div class="headline">
+          <h2 id="playTitle"></h2>
+          <div class="scorepill" id="scorePill">0 / 0</div>
+        </div>
+
+        <div class="stageRow">
+          <div class="stageChip" id="chip1">① 単語4択</div>
+          <div class="stageChip" id="chip2">② リスニング</div>
+          <div class="stageChip" id="chip3">③ 間違い復習</div>
+          <div class="stageChip" id="chip4">④ 受け答え</div>
+          <div class="stageChip" id="chip5">⑤ 文法穴埋め</div>
+          <div class="stageChip" id="chip6">⑥ 並び替え</div>
+        </div>
+
+        <div class="bar"><i id="barFill"></i></div>
+        <div id="panelBody"></div>
+      </div>
+    </section>
+
+    <div class="confetti" id="confetti"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
