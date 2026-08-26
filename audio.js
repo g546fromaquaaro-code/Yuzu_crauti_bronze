@@ -6,13 +6,33 @@ function playTap(){shortBeep(480,.06,'sine',.03)}
 function playGood(){shortBeep(660,.08,'triangle',.05);setTimeout(()=>shortBeep(880,.12,'triangle',.05),60)}
 function playBad(){shortBeep(260,.12,'sawtooth',.04);setTimeout(()=>shortBeep(210,.14,'sawtooth',.035),70)}
 function playClear(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>shortBeep(f,.18,'triangle',.05),i*80))}
-function getVoice(){const voices=speechSynthesis.getVoices();return voices.find(v=>/en/i.test(v.lang)&&/samantha|zira|ava|karen|moira/i.test(v.name))||voices.find(v=>/en/i.test(v.lang))}
-function duckBgm(on){bgmDuck=on?.35:1}
-function speak(text){ensureAudio();duckBgm(true);speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text),voice=getVoice();if(voice)u.voice=voice;u.lang='en-US';u.rate=.9;u.pitch=1.04;u.onend=()=>duckBgm(false);u.onerror=()=>duckBgm(false);speechSynthesis.speak(u)}
+function getVoice(){if(!('speechSynthesis' in window))return null;const voices=window.speechSynthesis.getVoices();return voices.find(v=>/en-US/i.test(v.lang)&&/samantha|ava|allison|susan|zira/i.test(v.name))||voices.find(v=>/^en/i.test(v.lang))||null}
+function duckBgm(on){bgmDuck=on?.24:1}
+function speak(text){
+  ensureAudio();
+  if(!('speechSynthesis' in window))return;
+  const synth=window.speechSynthesis;
+  duckBgm(true);
+  try{synth.resume()}catch(e){}
+  try{synth.cancel()}catch(e){}
+  const doSpeak=()=>{
+    const u=new SpeechSynthesisUtterance(String(text||''));
+    const voice=getVoice();
+    if(voice)u.voice=voice;
+    u.lang='en-US';u.rate=.86;u.pitch=1.02;u.volume=1;
+    u.onend=()=>duckBgm(false);
+    u.onerror=()=>duckBgm(false);
+    try{synth.resume()}catch(e){}
+    synth.speak(u);
+    setTimeout(()=>{try{if(synth.paused)synth.resume()}catch(e){}},120);
+  };
+  setTimeout(doSpeak,70);
+}
 function stopBgm(){bgmStopFlag=true;if(bgmTimer)clearTimeout(bgmTimer);bgmTimer=null}
 function note(freq,dur=.28){const ctx=ensureAudio();if(!ctx||freq===0||!store.settings.bgm)return;const t=ctx.currentTime,vol=.022*bgmDuck,o=ctx.createOscillator(),g=ctx.createGain();o.type='triangle';o.frequency.value=freq;g.gain.value=.0001;o.connect(g);g.connect(ctx.destination);g.gain.exponentialRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.start();o.stop(t+dur+.05);const bass=ctx.createOscillator(),bg=ctx.createGain();bass.type='sine';bass.frequency.value=freq/2;bg.gain.value=.0001;bass.connect(bg);bg.connect(ctx.destination);bg.gain.exponentialRampToValueAtTime(vol*.45,t+.01);bg.gain.exponentialRampToValueAtTime(.0001,t+dur*1.05);bass.start();bass.stop(t+dur+.06)}
 function startBgmTrack(trackIdx){if(!store.settings.bgm)return;ensureAudio();stopBgm();bgmStopFlag=false;const tr=BGM_TRACKS[trackIdx%BGM_TRACKS.length];let i=0;const trackName=document.getElementById('trackName');if(trackName)trackName.textContent='BGM: '+tr.name;function loop(){if(bgmStopFlag||!store.settings.bgm)return;note(tr.notes[i%tr.notes.length],tr.tempo*.9);i++;bgmTimer=setTimeout(loop,tr.tempo*1000)}loop()}
 function toggleBgm(){store.settings.bgm=!store.settings.bgm;saveStore();updateToggles();if(store.settings.bgm)startBgmTrack(state.currentTrack||0);else stopBgm();playTap()}
 function toggleSe(){store.settings.se=!store.settings.se;saveStore();updateToggles();if(store.settings.se)playTap()}
 function updateToggles(){const bgm=document.getElementById('bgmToggle'),se=document.getElementById('seToggle');if(bgm)bgm.textContent=store.settings.bgm?'🎵 BGM ON':'🎵 BGM OFF';if(se)se.textContent=store.settings.se?'🔔 SE ON':'🔔 SE OFF'}
-window.addEventListener('pointerdown',()=>{if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();if(store&&store.settings&&store.settings.bgm&&!bgmTimer)startBgmTrack(state.currentTrack||0)},{passive:true,once:true});
+if('speechSynthesis' in window){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();}
+window.addEventListener('pointerdown',()=>{if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();if('speechSynthesis' in window){try{window.speechSynthesis.resume()}catch(e){}}if(store&&store.settings&&store.settings.bgm&&!bgmTimer)startBgmTrack(state.currentTrack||0)},{passive:true,once:true});
