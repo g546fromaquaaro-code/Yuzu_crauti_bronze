@@ -1,5 +1,8 @@
 /* Safari/iPad audio compatibility patch */
 (function(){
+  let speechUnlocked=false;
+  let pendingAutoTimer=null;
+
   function safariSpeak(text){
     if(!('speechSynthesis' in window)) return false;
     const value=String(text||'').trim();
@@ -14,8 +17,31 @@
     u.volume=1;
     try{synth.speak(u);return true;}catch(e){return false;}
   }
+
+  function unlockSpeech(){
+    if(speechUnlocked || !('speechSynthesis' in window)) return;
+    const synth=window.speechSynthesis;
+    try{
+      const u=new SpeechSynthesisUtterance(' ');
+      u.lang='en-US';
+      u.volume=0;
+      synth.cancel();
+      synth.resume();
+      synth.speak(u);
+      speechUnlocked=true;
+    }catch(e){}
+  }
+
+  window.addEventListener('pointerdown',unlockSpeech,{passive:true});
+  window.addEventListener('touchstart',unlockSpeech,{passive:true});
+
   window.speak=safariSpeak;
   try{ speak=safariSpeak; }catch(e){}
+
+  function autoSpeak(text){
+    if(pendingAutoTimer)clearTimeout(pendingAutoTimer);
+    pendingAutoTimer=setTimeout(function(){safariSpeak(text);},120);
+  }
 
   /* Grade 5 listening:
      - auto-play once when each question appears
@@ -36,21 +62,15 @@
       if(btn){
         btn.addEventListener('click',function(ev){
           ev.preventDefault();ev.stopPropagation();
+          unlockSpeech();
           safariSpeak(p[0]);
           const hint=document.getElementById('g5AudioHint');
           if(hint)hint.textContent='🔊 もう一度再生しました';
         },{passive:false});
       }
 
-      /* Run after the new question is painted.  The page has already been
-         user-activated by entering the lesson / answering prior questions,
-         so current iPad Safari allows speechSynthesis here. */
       requestAnimationFrame(function(){
-        setTimeout(function(){
-          const ok=safariSpeak(p[0]);
-          const hint=document.getElementById('g5AudioHint');
-          if(hint)hint.textContent=ok?'🔊 自動再生中。聞き逃したら「もう一度聞く」':'「もう一度聞く」を押してください';
-        },80);
+        autoSpeak(p[0]);
       });
     };
     window.renderG5Listening=fixedRender;
