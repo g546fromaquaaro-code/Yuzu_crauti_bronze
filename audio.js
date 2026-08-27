@@ -1,46 +1,116 @@
-const BGM_TRACKS=[{"name":"Sky Pop","tempo":0.34,"notes":[523,659,784,659,698,659,587,523,0,523,659,784,880,784,659,587]},{"name":"Soda Step","tempo":0.32,"notes":[392,440,523,587,523,440,392,0,392,440,523,659,523,440,392,0]},{"name":"Bubble Walk","tempo":0.36,"notes":[440,494,523,494,440,392,349,392,440,494,523,659,587,523,494,440]},{"name":"Mint Parade","tempo":0.3,"notes":[330,392,440,392,330,294,330,392,440,494,523,494,440,392,330,294]},{"name":"Candy Rail","tempo":0.35,"notes":[523,587,659,698,659,587,523,494,440,494,523,587,659,587,523,494]},{"name":"Cloud Picnic","tempo":0.38,"notes":[294,330,392,440,392,330,294,262,294,330,392,523,494,440,392,330]},{"name":"Jelly Hop","tempo":0.31,"notes":[659,587,523,587,659,784,659,587,523,440,523,587,659,587,523,440]},{"name":"Aqua Park","tempo":0.33,"notes":[349,392,440,523,440,392,349,392,440,523,587,523,440,392,349,330]},{"name":"Star Cookie","tempo":0.29,"notes":[523,523,659,784,659,523,440,523,587,659,587,523,440,392,440,523]},{"name":"Blue Marshmallow","tempo":0.37,"notes":[262,330,392,330,262,294,330,392,523,392,330,294,262,330,392,440]}];
-let audioCtx=null,bgmTimer=null,bgmStopFlag=false,bgmDuck=1;
-function ensureAudio(){if(!audioCtx){const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return null;audioCtx=new Ctx()}if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
-function shortBeep(freq=600,dur=.12,type='triangle',vol=.06){if(!store.settings.se)return;const ctx=ensureAudio();if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.value=.0001;o.connect(g);g.connect(ctx.destination);const t=ctx.currentTime;g.gain.exponentialRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.start();o.stop(t+dur+.03)}
-function playTap(){shortBeep(480,.06,'sine',.03)}
-function playGood(){shortBeep(660,.08,'triangle',.05);setTimeout(()=>shortBeep(880,.12,'triangle',.05),60)}
-function playBad(){shortBeep(260,.12,'sawtooth',.04);setTimeout(()=>shortBeep(210,.14,'sawtooth',.035),70)}
-function playClear(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>shortBeep(f,.18,'triangle',.05),i*80))}
-function getVoice(){if(!('speechSynthesis' in window))return null;const voices=window.speechSynthesis.getVoices();return voices.find(v=>/en-US/i.test(v.lang)&&/samantha|ava|allison|susan|zira/i.test(v.name))||voices.find(v=>/^en-US/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||null}
-function duckBgm(on){bgmDuck=on?.18:1}
+const BGM_TRACKS=[
+{name:'Sky Pop',rate:.88},{name:'Soda Step',rate:.92},{name:'Bubble Walk',rate:.96},{name:'Mint Parade',rate:1.00},{name:'Candy Rail',rate:1.04},{name:'Cloud Picnic',rate:1.08},{name:'Jelly Hop',rate:.90},{name:'Aqua Park',rate:.98},{name:'Star Cookie',rate:1.06},{name:'Blue Marshmallow',rate:1.12}
+];
+
+let bgmAudio=null,bgmUrl=null,seUrl=null,mediaUnlocked=false,pendingBgm=0,bgmDuck=1;
+
+function b64ToObjectUrl(text){
+  const raw=atob(String(text||'').trim());
+  const bytes=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+  return URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));
+}
+
+const mediaReady=Promise.all([
+  fetch('audio/bgm-base64.txt',{cache:'force-cache'}).then(r=>{if(!r.ok)throw new Error('BGM load '+r.status);return r.text()}),
+  fetch('audio/se-base64.txt',{cache:'force-cache'}).then(r=>{if(!r.ok)throw new Error('SE load '+r.status);return r.text()})
+]).then(([b,s])=>{
+  bgmUrl=b64ToObjectUrl(b);
+  seUrl=b64ToObjectUrl(s);
+  bgmAudio=new Audio(bgmUrl);
+  bgmAudio.loop=true;
+  bgmAudio.preload='auto';
+  bgmAudio.volume=.12;
+  return true;
+}).catch(e=>{console.warn('audio assets',e);return false});
+
+function playMediaSe(rate=1,vol=.35){
+  if(typeof store!=='undefined'&&store.settings&&!store.settings.se)return;
+  mediaReady.then(ok=>{
+    if(!ok||!seUrl)return;
+    const a=new Audio(seUrl);
+    a.preload='auto';
+    a.volume=vol;
+    a.playbackRate=rate;
+    a.play().catch(()=>{});
+  });
+}
+function playTap(){playMediaSe(1,.28)}
+function playGood(){playMediaSe(1.22,.38)}
+function playBad(){playMediaSe(.72,.34)}
+function playClear(){playMediaSe(1.42,.42)}
+
+function getVoice(){
+  if(!('speechSynthesis' in window))return null;
+  const voices=window.speechSynthesis.getVoices();
+  return voices.find(v=>/^en-US/i.test(v.lang))||voices.find(v=>/^en/i.test(v.lang))||null;
+}
+function duckBgm(on){
+  bgmDuck=on?.2:1;
+  if(bgmAudio)bgmAudio.volume=.12*bgmDuck;
+}
 function speak(text){
-  ensureAudio();
   if(!('speechSynthesis' in window))return false;
-  const synth=window.speechSynthesis;
-  const value=String(text||'').trim();
+  const synth=window.speechSynthesis,value=String(text||'').trim();
   if(!value)return false;
   duckBgm(true);
-  try{if(synth.paused)synth.resume()}catch(e){}
-  try{if(synth.speaking||synth.pending)synth.cancel()}catch(e){}
+  try{synth.cancel();synth.resume()}catch(e){}
   const u=new SpeechSynthesisUtterance(value);
-  const voice=getVoice();
-  if(voice)u.voice=voice;
-  u.lang='en-US';
-  u.rate=.86;
-  u.pitch=1.02;
-  u.volume=1;
-  u.onstart=()=>duckBgm(true);
-  u.onend=()=>duckBgm(false);
-  u.onerror=()=>duckBgm(false);
-  try{
-    synth.speak(u);
-    return true;
-  }catch(e){
-    duckBgm(false);
-    return false;
-  }
+  const voice=getVoice();if(voice)u.voice=voice;
+  u.lang='en-US';u.rate=.82;u.pitch=1;u.volume=1;
+  u.onend=()=>duckBgm(false);u.onerror=()=>duckBgm(false);
+  try{synth.speak(u);return true}catch(e){duckBgm(false);return false}
 }
 window.speak=speak;
-function stopBgm(){bgmStopFlag=true;if(bgmTimer)clearTimeout(bgmTimer);bgmTimer=null}
-function note(freq,dur=.28){const ctx=ensureAudio();if(!ctx||freq===0||!store.settings.bgm)return;const t=ctx.currentTime,vol=.022*bgmDuck,o=ctx.createOscillator(),g=ctx.createGain();o.type='triangle';o.frequency.value=freq;g.gain.value=.0001;o.connect(g);g.connect(ctx.destination);g.gain.exponentialRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.start();o.stop(t+dur+.05);const bass=ctx.createOscillator(),bg=ctx.createGain();bass.type='sine';bass.frequency.value=freq/2;bg.gain.value=.0001;bass.connect(bg);bg.connect(ctx.destination);bg.gain.exponentialRampToValueAtTime(vol*.45,t+.01);bg.gain.exponentialRampToValueAtTime(.0001,t+dur*1.05);bass.start();bass.stop(t+dur+.06)}
-function startBgmTrack(trackIdx){if(!store.settings.bgm)return;ensureAudio();stopBgm();bgmStopFlag=false;const tr=BGM_TRACKS[trackIdx%BGM_TRACKS.length];let i=0;const trackName=document.getElementById('trackName');if(trackName)trackName.textContent='BGM: '+tr.name;function loop(){if(bgmStopFlag||!store.settings.bgm)return;note(tr.notes[i%tr.notes.length],tr.tempo*.9);i++;bgmTimer=setTimeout(loop,tr.tempo*1000)}loop()}
-function toggleBgm(){store.settings.bgm=!store.settings.bgm;saveStore();updateToggles();if(store.settings.bgm)startBgmTrack(state.currentTrack||0);else stopBgm();playTap()}
-function toggleSe(){store.settings.se=!store.settings.se;saveStore();updateToggles();if(store.settings.se)playTap()}
-function updateToggles(){const bgm=document.getElementById('bgmToggle'),se=document.getElementById('seToggle');if(bgm)bgm.textContent=store.settings.bgm?'🎵 BGM ON':'🎵 BGM OFF';if(se)se.textContent=store.settings.se?'🔔 SE ON':'🔔 SE OFF'}
-if('speechSynthesis' in window){try{window.speechSynthesis.getVoices()}catch(e){};window.speechSynthesis.onvoiceschanged=()=>{try{window.speechSynthesis.getVoices()}catch(e){}};}
-window.addEventListener('pointerdown',()=>{if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();if('speechSynthesis' in window){try{window.speechSynthesis.resume()}catch(e){}}if(store&&store.settings&&store.settings.bgm&&!bgmTimer)startBgmTrack(state.currentTrack||0)},{passive:true,once:true});
+
+function stopBgm(){
+  if(!bgmAudio)return;
+  try{bgmAudio.pause();bgmAudio.currentTime=0}catch(e){}
+}
+function startBgmTrack(trackIdx){
+  pendingBgm=Number(trackIdx)||0;
+  const tr=BGM_TRACKS[pendingBgm%BGM_TRACKS.length];
+  const trackName=document.getElementById('trackName');
+  if(trackName)trackName.textContent='BGM: '+tr.name;
+  if(typeof store!=='undefined'&&store.settings&&!store.settings.bgm){stopBgm();return}
+  mediaReady.then(ok=>{
+    if(!ok||!bgmAudio)return;
+    bgmAudio.playbackRate=tr.rate;
+    bgmAudio.volume=.12*bgmDuck;
+    if(!mediaUnlocked)return;
+    if(bgmAudio.paused){
+      try{bgmAudio.currentTime=0}catch(e){}
+      bgmAudio.play().catch(()=>{});
+    }
+  });
+}
+function toggleBgm(){
+  store.settings.bgm=!store.settings.bgm;saveStore();updateToggles();
+  if(store.settings.bgm){mediaUnlocked=true;startBgmTrack(state.currentTrack||0)}else stopBgm();
+  playTap();
+}
+function toggleSe(){
+  store.settings.se=!store.settings.se;saveStore();updateToggles();
+  mediaUnlocked=true;
+  if(store.settings.se)playTap();
+}
+function updateToggles(){
+  const bgm=document.getElementById('bgmToggle'),se=document.getElementById('seToggle');
+  if(bgm)bgm.textContent=store.settings.bgm?'🎵 BGM ON':'🎵 BGM OFF';
+  if(se)se.textContent=store.settings.se?'🔔 SE ON':'🔔 SE OFF';
+}
+
+function unlockMedia(){
+  mediaUnlocked=true;
+  mediaReady.then(ok=>{
+    if(!ok)return;
+    if(seUrl){
+      const a=new Audio(seUrl);a.volume=.001;
+      a.play().then(()=>{a.pause()}).catch(()=>{});
+    }
+    if(typeof store!=='undefined'&&store.settings&&store.settings.bgm)startBgmTrack(typeof state!=='undefined'?(state.currentTrack||pendingBgm):pendingBgm);
+  });
+  if('speechSynthesis' in window){try{speechSynthesis.resume()}catch(e){}}
+}
+window.addEventListener('pointerdown',unlockMedia,{passive:true,once:true});
+window.addEventListener('touchend',unlockMedia,{passive:true,once:true});
