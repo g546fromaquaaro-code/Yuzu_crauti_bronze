@@ -2,12 +2,14 @@
 (function(){
   const style=document.createElement('style');
   style.textContent=`
-    .g5LessonCard.g5-cleared{background:linear-gradient(180deg,#f5fbff,#eaf6ff);border-color:#b9daf4;box-shadow:0 8px 22px rgba(74,140,195,.10)}
-    .g5LessonCard.g5-perfect{background:linear-gradient(180deg,#f2fff7,#e2f9ea);border-color:#83d6a4;box-shadow:0 9px 24px rgba(56,154,96,.14)}
+    /* 青基調の画面でも一目で判別できるよう、補色寄りの暖色を使用 */
+    .g5LessonCard.g5-cleared{background:linear-gradient(180deg,#fff8e8,#ffefc7);border-color:#f0b44c;box-shadow:0 8px 22px rgba(210,139,27,.14)}
+    .g5LessonCard.g5-perfect{background:linear-gradient(180deg,#fff1ec,#ffd8cc);border-color:#ef7f63;box-shadow:0 9px 24px rgba(220,92,57,.17)}
     .g5LessonCard .g5StatusMark{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.02em}
-    .g5LessonCard .g5StatusMark.clear{background:#dff1ff;color:#3d7aa8}
-    .g5LessonCard .g5StatusMark.perfect{background:#cff3dc;color:#237543;border:1px solid #a9e3bd}
-    .g5LessonCard.g5-perfect .g5Progress i{background:linear-gradient(90deg,#71d59a,#49bc78)!important}
+    .g5LessonCard .g5StatusMark.clear{background:#ffe1a6;color:#8a5200;border:1px solid #f1bd58}
+    .g5LessonCard .g5StatusMark.perfect{background:#ffb9a8;color:#8f2f1c;border:1px solid #ef8b72}
+    .g5LessonCard.g5-cleared .g5Progress i{background:linear-gradient(90deg,#f4bb4a,#e99620)!important}
+    .g5LessonCard.g5-perfect .g5Progress i{background:linear-gradient(90deg,#f08b6f,#e85f43)!important}
   `;
   document.head.appendChild(style);
 
