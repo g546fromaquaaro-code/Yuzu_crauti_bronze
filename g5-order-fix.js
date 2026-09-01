@@ -1,4 +1,4 @@
-// 英検5級 ⑦並び替え：iPad/Safariでも確実に次へ進むための修正
+// 英検5級 ⑦並び替え：間違えた時は次へ進まず、その問題をやり直す
 (function(){
   if(typeof renderG5Order!=='function') return;
 
@@ -46,26 +46,37 @@
     const correct=g5State._orderCorrect||'';
     const ans=g5State.picked.map(x=>g5State.choices[x]).join(' ');
     const ok=ans===correct;
-    if(fb) fb.textContent=ok?'正解！':`正解は ${correct}.`;
-    ok?playGood():playBad();
 
-    document.querySelectorAll('#g5Body .token').forEach(b=>b.disabled=true);
-    const undo=document.getElementById('g5UndoBtn');
-    const answer=document.getElementById('g5OrderAnswerBtn');
-    if(undo) undo.disabled=true;
-    if(answer){
-      answer.disabled=true;
-      answer.textContent='次へ進みます…';
+    if(ok){
+      if(fb) fb.textContent='正解！';
+      playGood();
+      document.querySelectorAll('#g5Body .token').forEach(b=>b.disabled=true);
+      const undo=document.getElementById('g5UndoBtn');
+      const answer=document.getElementById('g5OrderAnswerBtn');
+      if(undo) undo.disabled=true;
+      if(answer){answer.disabled=true;answer.textContent='次へ進みます…';}
+      g5State.idx++;
+      setTimeout(()=>{
+        if(g5State.idx>=g5State.queue.length){
+          g5State.stage=8;
+          g5State.idx=0;
+          g5State.challenge=g5Shuffle([...Array(G5_DATA.phrases.length).keys()]).slice(0,5);
+        }
+        renderG5();
+      },650);
+      return;
     }
 
-    g5State.idx++;
-    setTimeout(()=>{
-      if(g5State.idx>=g5State.queue.length){
-        g5State.stage=8;
-        g5State.idx=0;
-        g5State.challenge=g5Shuffle([...Array(G5_DATA.phrases.length).keys()]).slice(0,5);
-      }
-      renderG5();
-    },650);
+    playBad();
+    if(fb) fb.innerHTML=`ちがうよ。正解は <b>${correct}.</b><br>もう一度並べてみよう！`;
+    // 間違えた問題は同じまま。選択だけリセットして再挑戦できるようにする
+    g5State.picked=[];
+    document.querySelectorAll('#g5Body .token').forEach(b=>{b.disabled=false;b.classList.remove('picked');});
+    const box=document.getElementById('g5AnswerBox');
+    if(box) box.innerHTML='';
+    const undo=document.getElementById('g5UndoBtn');
+    const answer=document.getElementById('g5OrderAnswerBtn');
+    if(undo) undo.disabled=false;
+    if(answer){answer.disabled=false;answer.textContent='もう一度答える';}
   };
 })();
