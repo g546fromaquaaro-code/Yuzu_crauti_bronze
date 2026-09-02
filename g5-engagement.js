@@ -162,14 +162,15 @@
     const previous=G5_LESSONS.find(x=>x.n===warm.lessonN);
     const pool=g5Shuffle(previous.phrases.map(x=>x[0]).filter(x=>x!==p[0])).slice(0,3);
     g5State.choices=g5Shuffle([p[0],...pool]);
+    g5State._warmupCorrect=p[0];
     g5Header(warm.items.length);
     document.getElementById('g5Score').textContent=`${warm.idx+1} / ${warm.items.length}`;
     document.getElementById('g5Bar').style.width=`${(warm.idx/warm.items.length)*100}%`;
-    document.getElementById('g5Body').innerHTML=`<div class="g5Warmup"><div class="g5WarmupFlag">↩ 3問だけウォームアップ</div><div class="g5WarmupLesson">Lesson ${warm.lessonN} を思い出そう</div><div class="g5WarmupEmoji">${p[3]}</div><div class="g5Phrase">${p[1]}</div><div class="choiceGrid">${g5State.choices.map((c,i)=>`<button class="choice" onclick="g5AnswerWarmup(${i},${JSON.stringify(p[0])})">${c}</button>`).join('')}</div><div class="feedback" id="g5Fb"></div></div>`;
+    document.getElementById('g5Body').innerHTML=`<div class="g5Warmup"><div class="g5WarmupFlag">↩ 3問だけウォームアップ</div><div class="g5WarmupLesson">Lesson ${warm.lessonN} を思い出そう</div><div class="g5WarmupEmoji">${p[3]}</div><div class="g5Phrase">${p[1]}</div><div class="choiceGrid">${g5State.choices.map((c,i)=>`<button class="choice" onclick="g5AnswerWarmup(${i})">${c}</button>`).join('')}</div><div class="feedback" id="g5Fb"></div></div>`;
     decorateQuestion();
   }
-  window.g5AnswerWarmup=function(i,correct){
-    const warm=g5State.warmup,item=warm.items[warm.idx],chosen=g5State.choices[i];
+  window.g5AnswerWarmup=function(i){
+    const warm=g5State.warmup,item=warm.items[warm.idx],chosen=g5State.choices[i],correct=g5State._warmupCorrect;
     const buttons=[...document.querySelectorAll('#g5Body .choice')];
     buttons.forEach(b=>b.disabled=true);
     if(chosen===correct){buttons[i]?.classList.add('good');document.getElementById('g5Fb').textContent='ナイス！ 前のLessonも覚えているね';playGood();}
@@ -194,10 +195,15 @@
     else if(mode===1){prompt=`<div class="g5ModeEmoji large">${p[3]}</div><div class="g5Phrase">${p[1]}</div>`;correct=p[0];field=0;label='🖼️ ピクチャークイズ';hint='この場面に合う英語はどれ？';}
     else{prompt=`<div class="g5SpeedBadge">3・2・1…</div><div class="g5Phrase">${p[1]}</div><div class="g5ModeEmoji">${p[3]}</div>`;correct=p[0];field=0;label='⚡ スピード翻訳';hint='パッと英語に変えてみよう！';}
     g5State.choices=g5Shuffle([correct,...g5PickOther(field,correct)]);
+    g5State._mixedCorrect=correct;
+    g5State._mixedPhraseIndex=phraseIndex;
     g5Header(g5State.queue.length);
-    document.getElementById('g5Body').innerHTML=`<div class="sub g5ModeLabel">${label}</div><div class="g5ModeHint">${hint}</div>${prompt}<div class="choiceGrid">${g5State.choices.map((c,i)=>`<button class="choice ${field===1?'jp':''}" onclick="g5AnswerMixed(${i},${JSON.stringify(correct)},${phraseIndex})">${c}</button>`).join('')}</div><div class="feedback" id="g5Fb"></div>`;
+    document.getElementById('g5Body').innerHTML=`<div class="sub g5ModeLabel">${label}</div><div class="g5ModeHint">${hint}</div>${prompt}<div class="choiceGrid">${g5State.choices.map((c,i)=>`<button class="choice ${field===1?'jp':''}" onclick="g5AnswerMixed(${i})">${c}</button>`).join('')}</div><div class="feedback" id="g5Fb"></div>`;
   };
-  window.g5AnswerMixed=function(i,correct,phraseIndex){g5Feedback(i,correct,()=>g5State.wrong.add(phraseIndex));};
+  window.g5AnswerMixed=function(i){
+    const correct=g5State._mixedCorrect,phraseIndex=g5State._mixedPhraseIndex;
+    g5Feedback(i,correct,()=>g5State.wrong.add(phraseIndex));
+  };
 
   const baseHeader=g5Header;
   window.g5Header=function(total=1){
@@ -261,8 +267,9 @@
 
   function resultHtml(items){
     if(!items.length)return `<div class="g5PerfectResult"><div class="g5ResultIcon">🏆✨</div><h4>ノーミスクリア！</h4><p>今日のことば、全部ばっちり。すごい！</p></div>`;
-    return `<div class="g5MistakeResult"><div class="g5ResultHead"><div><span>📝 今日のまちがいノート</span><strong>${items.length}問</strong></div><p>ここだけ見直せば、次はもっと強くなるよ！</p></div><div class="g5MistakeList">${items.map(x=>`<div class="g5MistakeItem"><div class="g5MistakeEmoji">${x.emoji||'💡'}</div><div class="g5MistakeWords"><b>${x.english}</b><span>${x.japanese}</span><small>📍 ${x.stage}${x.count>1?` · ${x.count}回チャレンジ`:''}</small></div><button class="g5MistakeSpeak" onclick="speak(${JSON.stringify(x.english)})" aria-label="${x.english}を聞く">🔊</button></div>`).join('')}</div></div>`;
+    return `<div class="g5MistakeResult"><div class="g5ResultHead"><div><span>📝 今日のまちがいノート</span><strong>${items.length}問</strong></div><p>ここだけ見直せば、次はもっと強くなるよ！</p></div><div class="g5MistakeList">${items.map((x,i)=>`<div class="g5MistakeItem"><div class="g5MistakeEmoji">${x.emoji||'💡'}</div><div class="g5MistakeWords"><b>${x.english}</b><span>${x.japanese}</span><small>📍 ${x.stage}${x.count>1?` · ${x.count}回チャレンジ`:''}</small></div><button class="g5MistakeSpeak" onclick="g5SpeakMistake(${i})" aria-label="英語を聞く">🔊</button></div>`).join('')}</div></div>`;
   }
+  window.g5SpeakMistake=function(i){const item=g5State.mistakeDetails?.[i];if(item)speak(item.english);};
   const baseFinish=finishG5;
   window.finishG5=function(){
     const items=Array.isArray(g5State.mistakeDetails)?g5State.mistakeDetails:[];
