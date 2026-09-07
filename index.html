@@ -10,102 +10,13 @@
   <link rel="stylesheet" href="g5-engagement.css?v=20260903-1">
 </head>
 <body>
-  <div class="topbar">
-    <div class="topbarIn">
-      <div class="brand">
-        <span aria-hidden="true" style="position:relative;width:52px;height:52px;border-radius:16px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#dff1ff,#ffffff);border:1px solid #cfe5f8;box-shadow:0 7px 18px rgba(92,145,194,.18);font-size:30px;line-height:1;flex:0 0 52px">📘<span style="position:absolute;right:3px;top:2px;font-size:14px">✨</span></span>
-        <span>Yuzu English</span>
-      </div>
-      <div class="topActions">
-        <button class="toggle" id="bgmToggle">🎵 BGM ON</button>
-        <button class="toggle" id="seToggle">🔔 SE ON</button>
-      </div>
-    </div>
-  </div>
-
+  <div class="topbar"><div class="topbarIn"><div class="brand"><span aria-hidden="true" style="position:relative;width:52px;height:52px;border-radius:16px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#dff1ff,#ffffff);border:1px solid #cfe5f8;box-shadow:0 7px 18px rgba(92,145,194,.18);font-size:30px;line-height:1;flex:0 0 52px">📘<span style="position:absolute;right:3px;top:2px;font-size:14px">✨</span></span><span>Yuzu English</span></div><div class="topActions"><button class="toggle" id="bgmToggle">🎵 BGM ON</button><button class="toggle" id="seToggle">🔔 SE ON</button></div></div></div>
   <div class="app">
-    <section id="home">
-      <div class="hero">
-        <div class="heroGrid">
-          <div>
-            <div class="heroTitle">☁️ 全レッスン <span style="font-size:16px;font-weight:800;opacity:.95">かわいい青色版</span></div>
-            <div class="heroSub">単語 → リスニング → 英語Q&A → 文法 → 並び替え → チャレンジまで、Lessonごとにしっかり練習。</div>
-            <div class="heroStats">
-              <div class="stat"><div>クリア</div><b id="clearCount">0</b><div>Lessons</div></div>
-              <div class="stat"><div>バッジ</div><b id="badgeCount">0</b><div>Collected</div></div>
-              <div class="stat"><div>BGM</div><b>10</b><div>Random tracks</div></div>
-            </div>
-          </div>
-          <div class="restaurant">
-            <div class="emoji" id="restEmoji">🛒</div>
-            <div class="name" id="restName">やたいスタンド</div>
-            <div class="sub">Lessonをクリアするとお店が成長します。<br><span id="trackName">BGM: -</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="cards" id="cards"></div>
-      <div class="badges">
-        <h4>ごほうびバッジ</h4>
-        <div class="badgeList" id="badgeList"></div>
-      </div>
-    </section>
-
-    <section id="play" class="hidden playWrap">
-      <div class="navRow">
-        <button class="back" onclick="goHome()">← Lesson一覧</button>
-        <div class="navTitle" id="playNav">Lesson</div>
-      </div>
-
-      <div class="panel">
-        <div class="headline">
-          <h2 id="playTitle"></h2>
-          <div class="scorepill" id="scorePill">0 / 0</div>
-        </div>
-
-        <div class="stageRow">
-          <div class="stageChip" id="chip1">① 単語4択</div>
-          <div class="stageChip" id="chip2">② 単語リスニング</div>
-          <div class="stageChip" id="chip3">③ 文章リスニング</div>
-          <div class="stageChip" id="chip4">④ 間違い復習</div>
-          <div class="stageChip" id="chip5">⑤ 英語で答える</div>
-          <div class="stageChip" id="chip6">⑥ 文法穴埋め</div>
-          <div class="stageChip" id="chip7">⑦ 並び替え</div>
-          <div class="stageChip" id="chip8">⑧ 5問チャレンジ</div>
-        </div>
-
-        <div class="bar"><i id="barFill"></i></div>
-        <div id="panelBody"></div>
-      </div>
-    </section>
-
+    <section id="home"><div class="hero"><div class="heroGrid"><div><div class="heroTitle">☁️ 全レッスン <span style="font-size:16px;font-weight:800;opacity:.95">かわいい青色版</span></div><div class="heroSub">単語 → リスニング → 英語Q&A → 文法 → 並び替え → チャレンジまで、Lessonごとにしっかり練習。</div><div class="heroStats"><div class="stat"><div>クリア</div><b id="clearCount">0</b><div>Lessons</div></div><div class="stat"><div>バッジ</div><b id="badgeCount">0</b><div>Collected</div></div><div class="stat"><div>BGM</div><b>10</b><div>Random tracks</div></div></div></div><div class="restaurant"><div class="emoji" id="restEmoji">🛒</div><div class="name" id="restName">やたいスタンド</div><div class="sub">Lessonをクリアするとお店が成長します。<br><span id="trackName">BGM: -</span></div></div></div></div><div class="cards" id="cards"></div><div class="badges"><h4>ごほうびバッジ</h4><div class="badgeList" id="badgeList"></div></div></section>
+    <section id="play" class="hidden playWrap"><div class="navRow"><button class="back" onclick="goHome()">← Lesson一覧</button><div class="navTitle" id="playNav">Lesson</div></div><div class="panel"><div class="headline"><h2 id="playTitle"></h2><div class="scorepill" id="scorePill">0 / 0</div></div><div class="stageRow"><div class="stageChip" id="chip1">① 単語4択</div><div class="stageChip" id="chip2">② 単語リスニング</div><div class="stageChip" id="chip3">③ 文章リスニング</div><div class="stageChip" id="chip4">④ 間違い復習</div><div class="stageChip" id="chip5">⑤ 英語で答える</div><div class="stageChip" id="chip6">⑥ 文法穴埋め</div><div class="stageChip" id="chip7">⑦ 並び替え</div><div class="stageChip" id="chip8">⑧ 5問チャレンジ</div></div><div class="bar"><i id="barFill"></i></div><div id="panelBody"></div></div></section>
     <div class="confetti" id="confetti"></div>
   </div>
-
-  <script src="data.js"></script>
-  <script src="lessons11-19.js"></script>
-  <script src="lessons21-25.js"></script>
-  <script src="lessons50-51.js"></script>
-  <script src="lessons52-57.js"></script>
-  <script src="audio.js"></script>
-  <script src="app.js"></script>
-  <script src="extras.js"></script>
-  <script src="fixes.js"></script>
-  <script src="reviewmenu.js"></script>
-  <script src="reset.js"></script>
-  <script src="grammar-intro.js"></script>
-  <script src="grade5.js"></script>
-  <script src="g5-variety.js"></script>
-  <script src="g5-order-fix.js"></script>
-  <script src="safari-audio-fix.js"></script>
-  <script src="g5-lesson6.js"></script>
-  <script src="g5-lessons7-10.js"></script>
-  <script src="g5-lessons11-20.js"></script>
-  <script src="g5-lessons21-22.js"></script>
-  <script src="g5-perfect-status.js"></script>
-  <script src="g5-clear-rewards.js?v=20260902-3"></script>
-  <script src="g5-engagement.js?v=20260903-2"></script>
-  <script src="g5-retry-until-correct.js?v=20260908-1"></script>
-  <!-- pages-redeploy: retry-until-correct 2026-09-08 -->
+  <script src="data.js"></script><script src="lessons11-19.js"></script><script src="lessons21-25.js"></script><script src="lessons50-51.js"></script><script src="lessons52-57.js"></script><script src="audio.js"></script><script src="app.js"></script><script src="extras.js"></script><script src="fixes.js"></script><script src="reviewmenu.js"></script><script src="reset.js"></script><script src="grammar-intro.js"></script><script src="grade5.js"></script><script src="g5-variety.js"></script><script src="g5-order-fix.js"></script><script src="safari-audio-fix.js"></script><script src="g5-lesson6.js"></script><script src="g5-lessons7-10.js"></script><script src="g5-lessons11-20.js"></script><script src="g5-lessons21-22.js"></script><script src="g5-lessons23-30.js?v=20260908-1"></script><script src="g5-perfect-status.js"></script><script src="g5-clear-rewards.js?v=20260902-3"></script><script src="g5-engagement.js?v=20260903-2"></script><script src="g5-retry-until-correct.js?v=20260908-1"></script>
+  <!-- pages-redeploy: lessons23-30 2026-09-08 -->
 </body>
 </html>
