@@ -12,8 +12,8 @@ const decode=s=>s.replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,
 function answerQuestion(a,wrong=false){const r=a.saved().session,q=B.questions[r.ids[r.pos]];assert.ok(q,q?.id);const html=a.root.innerHTML;if(q.type==='order'){const tokens=[...html.matchAll(/data-action="token" data-id="(\d+)"[^>]*>(.*?)<\/button>/g)].map(x=>({i:x[1],t:decode(x[2])}));const used=new Set();for(const t of q.tokens){const found=tokens.find(x=>x.t===t&&!used.has(x.i));assert.ok(found,'token '+t);used.add(found.i);a.act('token',found.i);}a.act('orderAnswer');}else{const options=[...html.matchAll(/data-action="answer" data-id="(\d+)"[^>]*><span class="g5v-number">\d+<\/span>(.*?)<\/button>/g)];if(['response','picture'].includes(q.type)){// Choice labels are intentionally hidden. Inspect only via mock speech utterances in separate browser QA.
  a.act('answer','0');return;}
  const match=options.find(x=>wrong?decode(x[2])!==q.answer:decode(x[2])===q.answer);assert.ok(match,q.id+' correct option is rendered');a.act('answer',match[1]);}}
-test('new Grade5 enters, opens all 50 lessons, renders grammar/order safely, and can leave for Bronze',()=>{const a=boot();assert.match(a.root.innerHTML,/合格レッスン/);for(const l of B.lessons){a.act('begin',l.id);const state=a.saved();assert.equal(state.session.lesson,l.id);assert.ok(state.session.ids.length>=16);for(const id of l.ids){const r=a.saved();r.session.ids=[id];r.session.pos=0;r.session.attempts={};r.session.firstResults={};r.session.wrong=[];r.session.rechecks=[];a.data[C.KEY]=JSON.stringify(r); // Reboot through the actual persistence boundary.
- const b=boot(a.data);b.act('resume');assert.match(b.root.innerHTML,/g5v-question/);assert.ok(!b.root.innerHTML.includes('onclick='));answerQuestion(b);}
+test('new Grade5 enters, opens all 60 lessons, renders grammar/order safely, and can leave for Bronze',async()=>{const a=boot();assert.match(a.root.innerHTML,/合格レッスン/);for(const l of B.lessons){a.act('begin',l.id);const state=a.saved();assert.equal(state.session.lesson,l.id);assert.ok(state.session.ids.length>=16);for(const id of l.ids){const r=a.saved();r.session.ids=[id];r.session.pos=0;r.session.attempts={};r.session.firstResults={};r.session.wrong=[];r.session.rechecks=[];a.data[C.KEY]=JSON.stringify(r); // Reboot through the actual persistence boundary.
+ const b=boot(a.data);b.act('resume');assert.match(b.root.innerHTML,/g5v-question/);assert.ok(!b.root.innerHTML.includes('onclick='));answerQuestion(b);await new Promise(resolve=>setImmediate(resolve));}
  }
  a.ctx.selectCourse('bronze');assert.equal(a.root.hidden,true);});
 test('wrong answer, retry, reload, delayed recheck and result preserve first-attempt accuracy',()=>{const a=boot();a.act('begin','course-01');answerQuestion(a,true);let r=a.saved().session;assert.equal(r.pos,0);assert.equal(r.wrong.length,1);assert.match(a.root.querySelector().innerHTML||'',/^/);a.act('retry');answerQuestion(a);assert.equal(a.saved().session.pos,1);const b=boot(a.data);b.act('resume');assert.ok(b.saved().session.wrong.length);});
@@ -27,4 +27,15 @@ test('new lesson completes, awards clear, and preserves an existing clear',()=>{
  const a=boot({[C.KEY]:JSON.stringify(initial)});a.act('begin','course-50');
  let count=0;while(a.saved().session&&count++<70){answerQuestion(a);a.act('next');}
  assert.ok(count<70);assert.equal(a.saved().session,null);assert.equal(a.saved().lessons['course-50'].cleared,true);assert.equal(a.saved().lessons['course-01'].best,100);assert.match(a.root.innerHTML,/先生に使ってみよう/);
+});
+
+test('S-only practice excludes A/B even when their review is due; filters show matching cards',()=>{
+ const old=C.fresh();const q=B.questions['course-56-phrase16-vocab'];C.record(old,q,{ok:false,first:true,now:1});
+ const a=boot({[C.KEY]:JSON.stringify(old)});a.act('unit','10');a.act('priorityFilter','A');assert.match(a.root.innerHTML,/data-id="course-54"/);assert.doesNotMatch(a.root.innerHTML,/data-action="start" data-id="course-51"/);
+ a.act('phraseMode','course-56',{mode:'priorityS'});const r=a.saved().session;assert.equal(r.mode,'practice');assert.ok(r.ids.length>0);assert.ok(r.ids.every(id=>B.questions[id].priority==='S'));assert.ok(!r.ids.includes(q.id));
+});
+test('lesson 60 completes and keeps saved teacher-use checks',()=>{
+ const old=C.fresh();old.teacherPractice={31:true};const a=boot({[C.KEY]:JSON.stringify(old)});a.act('begin','course-60');let count=0;
+ while(a.saved().session&&count++<90){answerQuestion(a);a.act('next');}
+ assert.ok(count<90);assert.equal(a.saved().lessons['course-60'].cleared,true);assert.equal(a.saved().teacherPractice[31],true);
 });
