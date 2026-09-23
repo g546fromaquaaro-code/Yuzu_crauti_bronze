@@ -39,3 +39,15 @@ test('lesson 60 completes and keeps saved teacher-use checks',()=>{
  while(a.saved().session&&count++<90){answerQuestion(a);a.act('next');}
  assert.ok(count<90);assert.equal(a.saved().lessons['course-60'].cleared,true);assert.equal(a.saved().teacherPractice[31],true);
 });
+
+test('shop preview is free; buying decorates the court and persists without double charging',()=>{
+ const old=C.fresh();old.coins=200;old.purchases=['tree'];const a=boot({[C.KEY]:JSON.stringify(old)});
+ assert.match(a.root.innerHTML,/data-town-item="tree"/);assert.doesNotMatch(a.root.innerHTML,/data-town-item="flag"/);
+ a.act('previewItem','flag');assert.match(a.root.innerHTML,/data-town-item="flag"/);assert.equal(a.saved().coins,200);assert.deepEqual(a.saved().purchases,['tree']);
+ a.act('shop');assert.doesNotMatch(a.root.innerHTML,/data-town-item="flag"/);
+ a.act('buy','flag');assert.equal(a.saved().coins,150);assert.match(a.root.innerHTML,/チームの旗が仲間入り/);assert.match(a.root.innerHTML,/data-town-item="flag"/);
+ a.act('buy','flag');assert.equal(a.saved().coins,150);
+ const b=boot(a.data);assert.match(b.root.innerHTML,/data-town-item="flag"/);assert.match(b.root.innerHTML,/data-town-item="tree"/);
+ for(const id of ['ball','jersey','fans','star']){const state=C.fresh();state.coins=1000;const c=boot({[C.KEY]:JSON.stringify(state)});c.act('buy',id);c.act('home');assert.ok(c.root.innerHTML.includes(`data-town-item="${id}"`));}
+ const poor=boot();poor.act('buy','star');assert.equal(poor.saved().coins,0);assert.deepEqual(poor.saved().purchases,[]);
+});
